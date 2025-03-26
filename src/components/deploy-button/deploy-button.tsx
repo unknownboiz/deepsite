@@ -63,7 +63,7 @@ function DeployButton({
         <p className="mr-3 text-sm text-gray-300">
           Connected as{" "}
           <a
-            href={`https://huggingface/${auth.preferred_username}`}
+            href={`https://huggingface.co/${auth.preferred_username}`}
             target="_blank"
             className="underline hover:text-white"
           >
