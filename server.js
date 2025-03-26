@@ -20,7 +20,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = process.env.APP_PORT || 3000;
-const REDIRECT_URI = `http://localhost:${PORT}/auth/login`;
+const REDIRECT_URI =
+  process.env.REDIRECT_URI || `http://localhost:${PORT}/auth/login`;
 const MODEL_ID = "deepseek-ai/DeepSeek-V3-0324";
 
 app.use(cookieParser());
