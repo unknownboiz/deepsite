@@ -5,6 +5,7 @@ colorFrom: green
 colorTo: purple
 sdk: docker
 pinned: false
+app_port: 5173
 license: mit
 short_description: Develop and deploy your static space in few-seconds
 ---
