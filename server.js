@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, "dist")));
 app.get("/api/login", (_req, res) => {
   res.redirect(
     302,
-    `https://huggingface.co/oauth/authorize?client_id=${process.env.OAUTH_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=openid%20profile%20read-repos%20write-repos%20manage-repos%20inference-api&prompt=consent&state=1234567890`
+    `https://huggingface.co/oauth/authorize?client_id=${process.env.OAUTH_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=openid%20profile%20write-repos%20manage-repos%20inference-api&prompt=consent&state=1234567890`
   );
 });
 app.get("/auth/login", async (req, res) => {
