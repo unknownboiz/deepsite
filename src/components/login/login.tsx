@@ -1,4 +1,23 @@
-function Login({ children }: { children?: React.ReactNode }) {
+import { useLocalStorage } from "react-use";
+import { defaultHTML } from "../../utils/consts";
+
+function Login({
+  html,
+  children,
+}: {
+  html?: string;
+  children?: React.ReactNode;
+}) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setStorage] = useLocalStorage("html_content");
+
+  const handleClick = () => {
+    if (html !== defaultHTML) {
+      setStorage(html);
+    }
+    console.log("store current HTML in local storage");
+  };
+
   return (
     <>
       <header className="flex items-center text-sm px-4 py-2 border-b border-gray-200 gap-2 bg-gray-100 font-semibold text-gray-700">
@@ -9,7 +28,7 @@ function Login({ children }: { children?: React.ReactNode }) {
       </header>
       <main className="px-4 py-4 space-y-3">
         {children}
-        <a href="/api/login">
+        <a href="/api/login" onClick={handleClick}>
           <img
             src="https://huggingface.co/datasets/huggingface/badges/resolve/main/sign-in-with-huggingface-lg-dark.svg"
             alt="Sign in with Hugging Face"

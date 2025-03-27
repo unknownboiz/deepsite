@@ -137,7 +137,7 @@ function AskAI({
           }
         )}
       >
-        <Login>
+        <Login html={html}>
           <p className="text-gray-500 text-sm mb-3">
             You reached the limit of free AI usage. Please login to continue.
           </p>

@@ -3,7 +3,13 @@ import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import classNames from "classnames";
 import { editor } from "monaco-editor";
-import { useMount, useUnmount, useEvent, createBreakpoint } from "react-use";
+import {
+  useMount,
+  useUnmount,
+  useEvent,
+  createBreakpoint,
+  useLocalStorage,
+} from "react-use";
 import { toast } from "react-toastify";
 
 import Header from "./header/header";
@@ -21,6 +27,8 @@ const useBreakpoint = createBreakpoint({
 
 function App() {
   const breakpoint = useBreakpoint();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [htmlStorage, _, removeHtmlStorage] = useLocalStorage("html_content");
 
   const preview = useRef<HTMLDivElement>(null);
   const editor = useRef<HTMLDivElement>(null);
@@ -29,7 +37,7 @@ function App() {
 
   const [isResizing, setIsResizing] = useState(false);
   const [error, setError] = useState(false);
-  const [html, setHtml] = useState(defaultHTML);
+  const [html, setHtml] = useState((htmlStorage as string) ?? defaultHTML);
   const [isAiWorking, setisAiWorking] = useState(false);
   const [auth, setAuth] = useState<Auth | undefined>(undefined);
 
@@ -72,6 +80,10 @@ function App() {
 
   useMount(() => {
     fetchMe();
+    if (htmlStorage) {
+      removeHtmlStorage();
+      toast.warn("Previous HTML content restored from local storage.");
+    }
     if (!editor.current || !preview.current) return;
 
     if (breakpoint === "lg") {

@@ -101,7 +101,7 @@ function DeployButton({
         )}
       >
         {!auth ? (
-          <Login />
+          <Login html={html} />
         ) : (
           <>
             <header className="flex items-center text-sm px-4 py-2 border-b border-gray-200 gap-2 bg-gray-100 font-semibold text-gray-700">
