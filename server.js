@@ -185,7 +185,7 @@ app.post("/api/ask-ai", async (req, res) => {
   try {
     const chatCompletion = client.chatCompletionStream({
       model: MODEL_ID,
-      provider: "fireworks-ai",
+      provider: "sambanova",
       messages: [
         {
           role: "system",
