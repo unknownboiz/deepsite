@@ -23,6 +23,7 @@ const PORT = process.env.APP_PORT || 3000;
 const REDIRECT_URI =
   process.env.REDIRECT_URI || `http://localhost:${PORT}/auth/login`;
 const MODEL_ID = "deepseek-ai/DeepSeek-V3-0324";
+const MAX_REQUESTS_PER_IP = 4;
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -162,7 +163,7 @@ app.post("/api/ask-ai", async (req, res) => {
   if (!hf_token) {
     // Rate limit requests from the same IP address, to prevent abuse, free is limited to 2 requests per IP
     ipAddresses.set(ip, (ipAddresses.get(ip) || 0) + 1);
-    if (ipAddresses.get(ip) > 2) {
+    if (ipAddresses.get(ip) > MAX_REQUESTS_PER_IP) {
       return res.status(429).send({
         ok: false,
         openLogin: true,
