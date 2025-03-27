@@ -188,15 +188,15 @@ app.post("/api/ask-ai", async (req, res) => {
       provider: "sambanova",
       messages: [
         {
-          role: "system",
+          role: "user",
           content:
             "ONLY USE HTML, CSS AND JAVASCRIPT. If you want to use ICON make sure to import the library first. Try to create the best UI possible by using only HTML, CSS and JAVASCRIPT. Also, try to ellaborate as much as you can, to create something unique. ALWAYS GIVE THE RESPONSE INTO A SINGLE HTML FILE",
         },
         ...(html
           ? [
               {
-                role: "user",
-                content: `My current code is: ${html}.`,
+                role: "system",
+                content: `The current code is: ${html}.`,
               },
             ]
           : []),
@@ -205,7 +205,7 @@ app.post("/api/ask-ai", async (req, res) => {
           content: prompt,
         },
       ],
-      max_tokens: 12_000,
+      max_tokens: 6_000,
     });
 
     while (true) {
@@ -216,11 +216,16 @@ app.post("/api/ask-ai", async (req, res) => {
       const chunk = value.choices[0]?.delta?.content;
       if (chunk) {
         // Stream chunk to client
-        res.write(chunk);
-        completeResponse += chunk;
-
-        // Break when HTML is complete
-        if (completeResponse.includes("</html>")) {
+        let newChunk = chunk;
+        if (chunk.includes("</html>")) {
+          console.log("Chunk before replacement:", newChunk);
+          // Replace everything after the last </html> tag with an empty string
+          newChunk = newChunk.replace(/<\/html>[\s\S]*/, "</html>");
+          console.log("Chunk after replacement:", newChunk);
+        }
+        completeResponse += newChunk;
+        res.write(newChunk);
+        if (newChunk.includes("</html>")) {
           break;
         }
       }
@@ -234,7 +239,7 @@ app.post("/api/ask-ai", async (req, res) => {
     if (!res.headersSent) {
       res.status(500).send({
         ok: false,
-        message: "Error generating response",
+        message: error.message,
       });
     } else {
       // Otherwise end the stream
