@@ -21,6 +21,7 @@ function AskAI({
 }) {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
+  const [hasAsked, setHasAsked] = useState(false);
 
   const callAi = async () => {
     if (isAiWorking) return;
@@ -57,6 +58,7 @@ function AskAI({
             toast.success("AI responded successfully");
             setPrompt("");
             setisAiWorking(false);
+            setHasAsked(true);
             return;
           }
 
@@ -97,7 +99,9 @@ function AskAI({
           type="text"
           disabled={isAiWorking}
           className="w-full bg-transparent outline-none pl-3 text-white placeholder:text-gray-500 font-code"
-          placeholder="Ask AI anything..."
+          placeholder={
+            hasAsked ? "What do you want to ask AI next?" : "Ask AI anything..."
+          }
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={(e) => {

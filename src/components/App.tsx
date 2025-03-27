@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import classNames from "classnames";
 import { editor } from "monaco-editor";
-import { useMount, useUnmount } from "react-use";
+import { useMount, useUnmount, useEvent } from "react-use";
 import { toast } from "react-toastify";
 
 import Header from "./header/header";
@@ -12,6 +12,7 @@ import { defaultHTML } from "../utils/consts";
 import Tabs from "./tabs/tabs";
 import AskAI from "./ask-ai/ask-ai";
 import { Auth } from "../utils/types";
+import Preview from "./preview/preview";
 
 function App() {
   const preview = useRef<HTMLDivElement>(null);
@@ -55,6 +56,13 @@ function App() {
     document.removeEventListener("mouseup", handleMouseUp);
   };
 
+  useEvent("beforeunload", (e) => {
+    if (isAiWorking || html !== defaultHTML) {
+      e.preventDefault();
+      return "";
+    }
+  });
+
   useMount(() => {
     fetchMe();
     if (!editor.current || !preview.current) return;
@@ -95,7 +103,7 @@ function App() {
             }
           }}
         >
-          <Tabs>{/* <Settings /> */}</Tabs>
+          <Tabs />
           <Editor
             language="html"
             theme="vs-dark"
@@ -131,18 +139,12 @@ function App() {
           ref={resizer}
           className="bg-gray-700 hover:bg-blue-500 w-2 cursor-col-resize h-[calc(100dvh-54px)]"
         />
-        <div
+        <Preview
+          html={html}
+          isResizing={isResizing}
+          isAiWorking={isAiWorking}
           ref={preview}
-          className="w-full border-l border-gray-900 bg-white h-[calc(100dvh-54px)]"
-        >
-          <iframe
-            title="output"
-            className={classNames("w-full h-full select-none", {
-              "pointer-events-none": isResizing || isAiWorking,
-            })}
-            srcDoc={html}
-          />
-        </div>
+        />
       </main>
       <main className="lg:hidden p-5">
         <p className="p-5 bg-red-500/10 text-red-500 rounded-md text-base text-pretty">

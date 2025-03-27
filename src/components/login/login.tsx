@@ -11,7 +11,7 @@ function Login({ children }: { children?: React.ReactNode }) {
         {children}
         <a href="/api/login">
           <img
-            src="https://huggingface.co/datasets/huggingface/badges/resolve/main/sign-in-with-huggingface-md-dark.svg"
+            src="https://huggingface.co/datasets/huggingface/badges/resolve/main/sign-in-with-huggingface-lg-dark.svg"
             alt="Sign in with Hugging Face"
             className="mx-auto"
           />
