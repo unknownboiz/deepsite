@@ -58,7 +58,7 @@ function DeployButton({
   };
 
   return (
-    <div className="relative max-lg:hidden flex items-center justify-end">
+    <div className="relative flex items-center justify-end">
       {auth && (
         <p className="mr-3 text-sm text-gray-300">
           Connected as{" "}
@@ -73,7 +73,7 @@ function DeployButton({
       )}
       <button
         className={classNames(
-          "relative cursor-pointer flex-none flex items-center justify-center rounded-md text-sm font-semibold leading-6 py-1.5 px-5 hover:bg-pink-400 text-white shadow-sm dark:shadow-highlight/20",
+          "relative cursor-pointer flex-none flex items-center justify-center rounded-md text-xs lg:text-sm font-semibold leading-5 lg:leading-6 py-1.5 px-5 hover:bg-pink-400 text-white shadow-sm dark:shadow-highlight/20",
           {
             "bg-pink-400": open,
             "bg-pink-500": !open,

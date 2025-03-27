@@ -42,9 +42,11 @@ function AskAI({
       if (request && request.body) {
         if (!request.ok) {
           const res = await request.json();
-          toast.error(res.message);
           if (res.openLogin) {
             setOpen(true);
+          } else {
+            // don't show toast if it's a login error
+            toast.error(res.message);
           }
           setisAiWorking(false);
           return;
@@ -89,16 +91,16 @@ function AskAI({
 
   return (
     <div
-      className={`bg-gray-950 rounded-xl py-2.5 pl-4 pr-2.5 sticky bottom-4 left-4 w-[calc(100%-2rem)] z-10 group ${
+      className={`bg-gray-950 rounded-xl py-2 lg:py-2.5 pl-3.5 lg:pl-4 pr-2 lg:pr-2.5 absolute lg:sticky bottom-3 left-3 lg:bottom-4 lg:left-4 w-[calc(100%-1.5rem)] lg:w-[calc(100%-2rem)] z-10 group ${
         isAiWorking ? "animate-pulse" : ""
       }`}
     >
       <div className="w-full relative flex items-center justify-between">
-        <RiSparkling2Fill className="text-xl text-gray-500 group-focus-within:text-pink-500" />
+        <RiSparkling2Fill className="text-lg lg:text-xl text-gray-500 group-focus-within:text-pink-500" />
         <input
           type="text"
           disabled={isAiWorking}
-          className="w-full bg-transparent outline-none pl-3 text-white placeholder:text-gray-500 font-code"
+          className="w-full bg-transparent max-lg:text-sm outline-none pl-3 text-white placeholder:text-gray-500 font-code"
           placeholder={
             hasAsked ? "What do you want to ask AI next?" : "Ask AI anything..."
           }

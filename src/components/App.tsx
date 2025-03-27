@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import classNames from "classnames";
 import { editor } from "monaco-editor";
-import { useMount, useUnmount, useEvent } from "react-use";
+import { useMount, useUnmount, useEvent, createBreakpoint } from "react-use";
 import { toast } from "react-toastify";
 
 import Header from "./header/header";
@@ -14,7 +14,14 @@ import AskAI from "./ask-ai/ask-ai";
 import { Auth } from "../utils/types";
 import Preview from "./preview/preview";
 
+const useBreakpoint = createBreakpoint({
+  md: 768,
+  lg: 1024,
+});
+
 function App() {
+  const breakpoint = useBreakpoint();
+
   const preview = useRef<HTMLDivElement>(null);
   const editor = useRef<HTMLDivElement>(null);
   const resizer = useRef<HTMLDivElement>(null);
@@ -66,11 +73,14 @@ function App() {
   useMount(() => {
     fetchMe();
     if (!editor.current || !preview.current) return;
-    // Set initial sizes
-    const initialEditorWidth = window.innerWidth / 2;
-    const initialPreviewWidth = window.innerWidth - initialEditorWidth - 4;
-    editor.current.style.width = `${initialEditorWidth}px`;
-    preview.current.style.width = `${initialPreviewWidth}px`;
+
+    if (breakpoint === "lg") {
+      // Set initial sizes
+      const initialEditorWidth = window.innerWidth / 2;
+      const initialPreviewWidth = window.innerWidth - initialEditorWidth - 4;
+      editor.current.style.width = `${initialEditorWidth}px`;
+      preview.current.style.width = `${initialPreviewWidth}px`;
+    }
 
     if (!resizer.current) return;
     resizer.current.addEventListener("mousedown", handleMouseDown);
@@ -91,10 +101,10 @@ function App() {
       <Header>
         <DeployButton html={html} error={error} auth={auth} />
       </Header>
-      <main className="lg:flex w-full hidden">
+      <main className="max-lg:flex-col flex w-full">
         <div
           ref={editor}
-          className="w-full h-full relative"
+          className="w-full h-[30dvh] lg:h-full relative"
           onClick={(e) => {
             if (isAiWorking) {
               e.preventDefault();
@@ -107,9 +117,12 @@ function App() {
           <Editor
             language="html"
             theme="vs-dark"
-            className={classNames("h-[calc(100dvh-96px)]", {
-              "pointer-events-none": isAiWorking,
-            })}
+            className={classNames(
+              "h-[calc(30dvh-41px)] lg:h-[calc(100dvh-96px)]",
+              {
+                "pointer-events-none": isAiWorking,
+              }
+            )}
             value={html}
             onValidate={(markers) => {
               if (markers?.length > 0) {
@@ -137,7 +150,7 @@ function App() {
         </div>
         <div
           ref={resizer}
-          className="bg-gray-700 hover:bg-blue-500 w-2 cursor-col-resize h-[calc(100dvh-54px)]"
+          className="bg-gray-700 hover:bg-blue-500 w-2 cursor-col-resize h-[calc(100dvh-54px)] max-lg:hidden"
         />
         <Preview
           html={html}
@@ -145,12 +158,6 @@ function App() {
           isAiWorking={isAiWorking}
           ref={preview}
         />
-      </main>
-      <main className="lg:hidden p-5">
-        <p className="p-5 bg-red-500/10 text-red-500 rounded-md text-base text-pretty">
-          This app is not yet optimized for mobile. Please use a desktop browser
-          for the best experience.
-        </p>
       </main>
     </div>
   );

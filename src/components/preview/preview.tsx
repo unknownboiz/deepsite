@@ -29,7 +29,7 @@ function Preview({
   return (
     <div
       ref={ref}
-      className="w-full border-l border-gray-900 bg-white h-[calc(100dvh-54px)] relative"
+      className="w-full border-l border-gray-900 bg-white h-[calc(70dvh-53px)] lg:h-[calc(100dvh-54px)] relative"
     >
       <iframe
         ref={iframeRef}
@@ -40,7 +40,7 @@ function Preview({
         srcDoc={html}
       />
       <button
-        className="bg-gray-900 shadow-md text-white text-sm font-medium absolute bottom-5 right-5 py-2 px-4 rounded-lg flex items-center gap-2 border border-gray-800 hover:brightness-150 transition-all duration-100 cursor-pointer"
+        className="bg-gray-950 shadow-md text-white text-xs lg:text-sm font-medium absolute bottom-3 lg:bottom-5 right-3 lg:right-5 py-2 px-3 lg:px-4 rounded-lg flex items-center gap-2 border border-gray-900 hover:brightness-150 transition-all duration-100 cursor-pointer"
         onClick={handleRefreshIframe}
       >
         <TbReload />

@@ -11,6 +11,7 @@ export const defaultHTML = `<!DOCTYPE html>
         align-items: center;
         height: 100dvh;
         font-family: "Arial", sans-serif;
+        text-align: center;
       }
     </style>
   </head>
