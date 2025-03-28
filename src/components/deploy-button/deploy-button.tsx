@@ -117,7 +117,12 @@ function DeployButton({
         )}
       >
         {!auth ? (
-          <Login html={html} />
+          <Login html={html}>
+            <p className="text-gray-500 text-sm mb-3">
+              You need to be logged in to deploy your project. Please log in
+              using the button below.
+            </p>
+          </Login>
         ) : (
           <>
             <header className="flex items-center text-sm px-4 py-2 border-b border-gray-200 gap-2 bg-gray-100 font-semibold text-gray-700">

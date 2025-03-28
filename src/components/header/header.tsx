@@ -29,11 +29,11 @@ function Header({
         </h1>
         <p className="text-gray-700 max-md:hidden">|</p>
         <button
-          className="max-md:hidden relative cursor-pointer flex-none flex items-center justify-center rounded-md text-xs font-semibold leading-5 py-1.5 px-4 hover:bg-gray-100 text-gray-950 shadow-sm dark:shadow-highlight/20 bg-white"
+          className="max-md:hidden relative cursor-pointer flex-none flex items-center justify-center rounded-md text-xs font-semibold leading-4 py-1.5 px-3 hover:bg-gray-700 text-gray-100 shadow-sm dark:shadow-highlight/20 bg-gray-800"
           onClick={handleConfirm}
         >
-          <MdAdd className="text-gray-800 mr-1 text-base" />
-          New Project
+          <MdAdd className="mr-1 text-base" />
+          New
         </button>
         <p className="text-gray-500 text-sm max-md:hidden">
           Imagine and Share in 1-Click
