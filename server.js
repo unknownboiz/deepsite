@@ -189,12 +189,10 @@ app.post("/api/ask-ai", async (req, res) => {
   const client = new InferenceClient(token);
   let completeResponse = "";
 
-  const useNebius = html?.length > 2_500;
-
   try {
     const chatCompletion = client.chatCompletionStream({
       model: MODEL_ID,
-      provider: useNebius ? "nebius" : "sambanova",
+      provider: "nebius",
       messages: [
         {
           role: "system",
@@ -222,7 +220,7 @@ app.post("/api/ask-ai", async (req, res) => {
           content: prompt,
         },
       ],
-      max_tokens: useNebius ? 8_192 : 6_000,
+      max_tokens: 12_000,
     });
 
     while (true) {
@@ -232,25 +230,12 @@ app.post("/api/ask-ai", async (req, res) => {
       }
       const chunk = value.choices[0]?.delta?.content;
       if (chunk) {
-        if (useNebius) {
-          res.write(chunk);
-          completeResponse += chunk;
+        res.write(chunk);
+        completeResponse += chunk;
 
-          // Break when HTML is complete
-          if (completeResponse.includes("</html>")) {
-            break;
-          }
-        } else {
-          let newChunk = chunk;
-          if (chunk.includes("</html>")) {
-            // Replace everything after the last </html> tag with an empty string
-            newChunk = newChunk.replace(/<\/html>[\s\S]*/, "</html>");
-          }
-          completeResponse += newChunk;
-          res.write(newChunk);
-          if (newChunk.includes("</html>")) {
-            break;
-          }
+        // Break when HTML is complete
+        if (completeResponse.includes("</html>")) {
+          break;
         }
       }
     }
