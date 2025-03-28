@@ -185,7 +185,7 @@ app.post("/api/ask-ai", async (req, res) => {
   try {
     const chatCompletion = client.chatCompletionStream({
       model: MODEL_ID,
-      provider: "sambanova",
+      provider: html ? "fireworks-ai" : "sambanova",
       messages: [
         {
           role: "user",
@@ -205,7 +205,7 @@ app.post("/api/ask-ai", async (req, res) => {
           content: prompt,
         },
       ],
-      max_tokens: 6_000,
+      max_tokens: 8_192,
     });
 
     while (true) {
