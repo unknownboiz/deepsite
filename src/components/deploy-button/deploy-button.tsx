@@ -119,8 +119,7 @@ function DeployButton({
         {!auth ? (
           <Login html={html}>
             <p className="text-gray-500 text-sm mb-3">
-              You need to be logged in to deploy your project. Please log in
-              using the button below.
+              Host this project for free and share it with your friends.
             </p>
           </Login>
         ) : (
