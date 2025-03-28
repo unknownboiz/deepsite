@@ -41,7 +41,7 @@ export const defaultHTML = `<!DOCTYPE html>
       <span>I'm ready to work,</span><br />
       Ask me anything.
     </h1>
-    <img src="https://enzostvs-test-enzo-lol.static.hf.space/arrow.svg" class="arrow" />
+    <img src="https://enzostvs-deepsite.static.hf.space/arrow.svg" class="arrow" />
     <script></script>
   </body>
 </html>
