@@ -237,7 +237,7 @@ app.post("/api/ask-ai", async (req, res) => {
     if (!res.headersSent) {
       res.status(500).send({
         ok: false,
-        message: error.message,
+        message: `You probably reached the MAX_TOKENS limit, context is too long. You can start a new conversation by refreshing the page.`,
       });
     } else {
       // Otherwise end the stream
