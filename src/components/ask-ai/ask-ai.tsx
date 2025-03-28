@@ -3,8 +3,10 @@ import { RiSparkling2Fill } from "react-icons/ri";
 import { GrSend } from "react-icons/gr";
 import classNames from "classnames";
 import { toast } from "react-toastify";
+
 import Login from "../login/login";
 import { defaultHTML } from "../../utils/consts";
+import SuccessSound from "./../../assets/success.mp3";
 
 function AskAI({
   html,
@@ -23,6 +25,8 @@ function AskAI({
   const [prompt, setPrompt] = useState("");
   const [hasAsked, setHasAsked] = useState(false);
   const [previousPrompt, setPreviousPrompt] = useState("");
+  const audio = new Audio(SuccessSound);
+  audio.volume = 0.5;
 
   const callAi = async () => {
     if (isAiWorking || !prompt.trim()) return;
@@ -65,13 +69,16 @@ function AskAI({
             setPreviousPrompt(prompt);
             setisAiWorking(false);
             setHasAsked(true);
-            
-            // Now we have the complete HTML including </html>, so set it to be sure 
-            const finalDoc = contentResponse.match(/<!DOCTYPE html>[\s\S]*<\/html>/)?.[0];
+            audio.play();
+
+            // Now we have the complete HTML including </html>, so set it to be sure
+            const finalDoc = contentResponse.match(
+              /<!DOCTYPE html>[\s\S]*<\/html>/
+            )?.[0];
             if (finalDoc) {
               setHtml(finalDoc);
             }
-            
+
             return;
           }
 
