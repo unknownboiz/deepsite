@@ -25,10 +25,11 @@ function AskAI({
   const [previousPrompt, setPreviousPrompt] = useState("");
 
   const callAi = async () => {
-    if (isAiWorking) return;
+    if (isAiWorking || !prompt.trim()) return;
     setisAiWorking(true);
 
     let contentResponse = "";
+    let lastRenderTime = 0;
     try {
       const request = await fetch("/api/ask-ai", {
         method: "POST",
@@ -64,6 +65,13 @@ function AskAI({
             setPreviousPrompt(prompt);
             setisAiWorking(false);
             setHasAsked(true);
+            
+            // Now we have the complete HTML including </html>, so set it to be sure 
+            const finalDoc = contentResponse.match(/<!DOCTYPE html>[\s\S]*<\/html>/)?.[0];
+            if (finalDoc) {
+              setHtml(finalDoc);
+            }
+            
             return;
           }
 
@@ -71,8 +79,20 @@ function AskAI({
           contentResponse += chunk;
           const newHtml = contentResponse.match(/<!DOCTYPE html>[\s\S]*/)?.[0];
           if (newHtml) {
-            setHtml(newHtml);
-            if (newHtml?.length > 200) {
+            // Force-close the HTML tag so the iframe doesn't render half-finished markup
+            let partialDoc = newHtml;
+            if (!partialDoc.includes("</html>")) {
+              partialDoc += "\n</html>";
+            }
+
+            // Throttle the re-renders to avoid flashing/flicker
+            const now = Date.now();
+            if (now - lastRenderTime > 300) {
+              setHtml(partialDoc);
+              lastRenderTime = now;
+            }
+
+            if (partialDoc.length > 200) {
               onScrollToBottom();
             }
           }
