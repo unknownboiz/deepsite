@@ -1,6 +1,6 @@
 ---
-title: Space Generator
-emoji: 🚀
+title: DeepSite
+emoji: 🐳
 colorFrom: green
 colorTo: purple
 sdk: docker
