@@ -10,12 +10,6 @@ function Header({
   onReset: () => void;
   children?: ReactNode;
 }) {
-  const handleConfirm = () => {
-    if (window.confirm("You're about to reset the editor. Are you sure?")) {
-      onReset();
-    }
-  };
-
   return (
     <header className="border-b border-gray-900 px-3 lg:px-6 py-2 flex justify-between items-center">
       <div className="flex items-center justify-start gap-3">
@@ -30,7 +24,7 @@ function Header({
         <p className="text-gray-700 max-md:hidden">|</p>
         <button
           className="max-md:hidden relative cursor-pointer flex-none flex items-center justify-center rounded-md text-xs font-semibold leading-4 py-1.5 px-3 hover:bg-gray-700 text-gray-100 shadow-sm dark:shadow-highlight/20 bg-gray-800"
-          onClick={handleConfirm}
+          onClick={onReset}
         >
           <MdAdd className="mr-1 text-base" />
           New

@@ -136,7 +136,24 @@ function App() {
 
   return (
     <div className="h-screen bg-gray-950 font-sans overflow-hidden">
-      <Header onReset={() => setHtml(defaultHTML)}>
+      <Header
+        onReset={() => {
+          if (isAiWorking) {
+            toast.warn("Please wait for the AI to finish working.");
+            return;
+          }
+          if (
+            window.confirm("You're about to reset the editor. Are you sure?")
+          ) {
+            setHtml(defaultHTML);
+            setError(false);
+            removeHtmlStorage();
+            editorRef.current?.revealLine(
+              editorRef.current?.getModel()?.getLineCount() ?? 0
+            );
+          }
+        }}
+      >
         <DeployButton html={html} error={error} auth={auth} />
       </Header>
       <main className="max-lg:flex-col flex w-full">
