@@ -22,6 +22,7 @@ function AskAI({
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [hasAsked, setHasAsked] = useState(false);
+  const [previousPrompt, setPreviousPrompt] = useState("");
 
   const callAi = async () => {
     if (isAiWorking) return;
@@ -34,6 +35,7 @@ function AskAI({
         body: JSON.stringify({
           prompt,
           ...(html === defaultHTML ? {} : { html }),
+          ...(previousPrompt ? { previousPrompt } : {}),
         }),
         headers: {
           "Content-Type": "application/json",
@@ -59,6 +61,7 @@ function AskAI({
           if (done) {
             toast.success("AI responded successfully");
             setPrompt("");
+            setPreviousPrompt(prompt);
             setisAiWorking(false);
             setHasAsked(true);
             return;
