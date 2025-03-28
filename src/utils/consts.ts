@@ -27,6 +27,13 @@ export const defaultHTML = `<!DOCTYPE html>
         color: #acacac;
         font-size: 32px;
       }
+      @media screen and (max-width: 640px) {
+        .arrow {
+          top: 12px;
+          left: 56px;
+          transform: rotate(180deg);
+        }
+      }
     </style>
   </head>
   <body>
