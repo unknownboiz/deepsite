@@ -1,7 +1,21 @@
-import Logo from "@/assets/logo.svg";
 import { ReactNode } from "react";
+import { MdAdd } from "react-icons/md";
 
-function Header({ children }: { children?: ReactNode }) {
+import Logo from "@/assets/logo.svg";
+
+function Header({
+  onReset,
+  children,
+}: {
+  onReset: () => void;
+  children?: ReactNode;
+}) {
+  const handleConfirm = () => {
+    if (window.confirm("You're about to reset the editor. Are you sure?")) {
+      onReset();
+    }
+  };
+
   return (
     <header className="border-b border-gray-900 px-3 lg:px-6 py-2 flex justify-between items-center">
       <div className="flex items-center justify-start gap-3">
@@ -14,8 +28,15 @@ function Header({ children }: { children?: ReactNode }) {
           DeepSite
         </h1>
         <p className="text-gray-700 max-md:hidden">|</p>
+        <button
+          className="max-md:hidden relative cursor-pointer flex-none flex items-center justify-center rounded-md text-xs font-semibold leading-5 py-1.5 px-4 hover:bg-gray-100 text-gray-950 shadow-sm dark:shadow-highlight/20 bg-white"
+          onClick={handleConfirm}
+        >
+          <MdAdd className="text-gray-800 mr-1 text-base" />
+          New Project
+        </button>
         <p className="text-gray-500 text-sm max-md:hidden">
-          Code and Deploy in 1-Click
+          Imagine and Share in 1-Click
         </p>
       </div>
       {children}

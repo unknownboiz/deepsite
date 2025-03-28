@@ -8,6 +8,20 @@ import Loading from "../loading/loading";
 import Login from "../login/login";
 import { Auth } from "../../utils/types";
 
+const MsgToast = ({ url }: { url: string }) => (
+  <div className="w-full flex items-center justify-center gap-3">
+    Your space is live!
+    <button
+      className="bg-black text-sm block text-white rounded-md px-3 py-1.5 hover:bg-gray-900 cursor-pointer"
+      onClick={() => {
+        window.open(url, "_blank");
+      }}
+    >
+      See Space
+    </button>
+  </div>
+);
+
 function DeployButton({
   html,
   error = false,
@@ -43,7 +57,9 @@ function DeployButton({
       const response = await request.json();
       if (response.ok) {
         toast.success(
-          path ? `Space updated successfully!` : `Space created successfully!`
+          <MsgToast
+            url={`https://huggingface.co/spaces/${response.path ?? path}`}
+          />
         );
         setPath(response.path);
       } else {

@@ -13,12 +13,28 @@ export const defaultHTML = `<!DOCTYPE html>
         font-family: "Arial", sans-serif;
         text-align: center;
       }
+      .arrow {
+        position: absolute;
+        bottom: 32px;
+        left: 0px;
+        width: 100px;
+        transform: rotate(30deg);
+      }
+      h1 {
+        font-size: 50px;
+      }
+      h1 span {
+        color: #acacac;
+        font-size: 32px;
+      }
     </style>
   </head>
   <body>
     <h1>
-      Start editing to see some magic happen!
+      <span>I'm ready to work,</span><br />
+      Ask me anything.
     </h1>
+    <img src="/arrow.svg" class="arrow" />
     <script></script>
   </body>
 </html>

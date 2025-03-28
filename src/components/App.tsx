@@ -2,12 +2,7 @@ import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import classNames from "classnames";
 import { editor } from "monaco-editor";
-import {
-  useMount,
-  useUnmount,
-  useEvent,
-  useLocalStorage,
-} from "react-use";
+import { useMount, useUnmount, useEvent, useLocalStorage } from "react-use";
 import { toast } from "react-toastify";
 
 import Header from "./header/header";
@@ -17,7 +12,6 @@ import Tabs from "./tabs/tabs";
 import AskAI from "./ask-ai/ask-ai";
 import { Auth } from "../utils/types";
 import Preview from "./preview/preview";
-
 
 function App() {
   const [htmlStorage, , removeHtmlStorage] = useLocalStorage("html_content");
@@ -62,8 +56,8 @@ function App() {
       preview.current.style.width = `${initialPreviewWidth}px`;
     } else {
       // Remove inline styles for smaller screens, let CSS flex-col handle it
-      editor.current.style.width = '';
-      preview.current.style.width = '';
+      editor.current.style.width = "";
+      preview.current.style.width = "";
     }
   };
 
@@ -73,15 +67,19 @@ function App() {
    */
   const handleResize = (e: MouseEvent) => {
     if (!editor.current || !preview.current || !resizer.current) return;
-    
+
     const resizerWidth = resizer.current.offsetWidth;
     const minWidth = 100; // Minimum width for editor/preview
     const maxWidth = window.innerWidth - resizerWidth - minWidth;
-    
+
     const editorWidth = e.clientX;
-    const clampedEditorWidth = Math.max(minWidth, Math.min(editorWidth, maxWidth));
-    const calculatedPreviewWidth = window.innerWidth - clampedEditorWidth - resizerWidth;
-    
+    const clampedEditorWidth = Math.max(
+      minWidth,
+      Math.min(editorWidth, maxWidth)
+    );
+    const calculatedPreviewWidth =
+      window.innerWidth - clampedEditorWidth - resizerWidth;
+
     editor.current.style.width = `${clampedEditorWidth}px`;
     preview.current.style.width = `${calculatedPreviewWidth}px`;
   };
@@ -110,7 +108,7 @@ function App() {
   useMount(() => {
     // Fetch user data
     fetchMe();
-    
+
     // Restore content from storage if available
     if (htmlStorage) {
       removeHtmlStorage();
@@ -138,7 +136,7 @@ function App() {
 
   return (
     <div className="h-screen bg-gray-950 font-sans overflow-hidden">
-      <Header>
+      <Header onReset={() => setHtml(defaultHTML)}>
         <DeployButton html={html} error={error} auth={auth} />
       </Header>
       <main className="max-lg:flex-col flex w-full">
