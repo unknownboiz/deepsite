@@ -8,14 +8,12 @@ function Login({
   html?: string;
   children?: React.ReactNode;
 }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setStorage] = useLocalStorage("html_content");
+  const [, setStorage] = useLocalStorage("html_content");
 
   const handleClick = () => {
     if (html !== defaultHTML) {
       setStorage(html);
     }
-    console.log("store current HTML in local storage");
   };
 
   return (

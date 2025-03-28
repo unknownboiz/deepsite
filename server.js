@@ -218,10 +218,8 @@ app.post("/api/ask-ai", async (req, res) => {
         // Stream chunk to client
         let newChunk = chunk;
         if (chunk.includes("</html>")) {
-          console.log("Chunk before replacement:", newChunk);
           // Replace everything after the last </html> tag with an empty string
           newChunk = newChunk.replace(/<\/html>[\s\S]*/, "</html>");
-          console.log("Chunk after replacement:", newChunk);
         }
         completeResponse += newChunk;
         res.write(newChunk);

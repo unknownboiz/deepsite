@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
 import classNames from "classnames";
@@ -7,7 +6,6 @@ import {
   useMount,
   useUnmount,
   useEvent,
-  createBreakpoint,
   useLocalStorage,
 } from "react-use";
 import { toast } from "react-toastify";
@@ -20,15 +18,9 @@ import AskAI from "./ask-ai/ask-ai";
 import { Auth } from "../utils/types";
 import Preview from "./preview/preview";
 
-const useBreakpoint = createBreakpoint({
-  md: 768,
-  lg: 1024,
-});
 
 function App() {
-  const breakpoint = useBreakpoint();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [htmlStorage, _, removeHtmlStorage] = useLocalStorage("html_content");
+  const [htmlStorage, , removeHtmlStorage] = useLocalStorage("html_content");
 
   const preview = useRef<HTMLDivElement>(null);
   const editor = useRef<HTMLDivElement>(null);
@@ -51,12 +43,47 @@ function App() {
     }
   };
 
+  /**
+   * Resets the layout based on screen size
+   * - For desktop: Sets editor to 1/3 width and preview to 2/3
+   * - For mobile: Removes inline styles to let CSS handle it
+   */
+  const resetLayout = () => {
+    if (!editor.current || !preview.current) return;
+
+    // lg breakpoint is 1024px based on useBreakpoint definition and Tailwind defaults
+    if (window.innerWidth >= 1024) {
+      // Set initial 1/3 - 2/3 sizes for large screens, accounting for resizer width
+      const resizerWidth = resizer.current?.offsetWidth ?? 8; // w-2 = 0.5rem = 8px
+      const availableWidth = window.innerWidth - resizerWidth;
+      const initialEditorWidth = availableWidth / 3; // Editor takes 1/3 of space
+      const initialPreviewWidth = availableWidth - initialEditorWidth; // Preview takes 2/3
+      editor.current.style.width = `${initialEditorWidth}px`;
+      preview.current.style.width = `${initialPreviewWidth}px`;
+    } else {
+      // Remove inline styles for smaller screens, let CSS flex-col handle it
+      editor.current.style.width = '';
+      preview.current.style.width = '';
+    }
+  };
+
+  /**
+   * Handles resizing when the user drags the resizer
+   * Ensures minimum widths are maintained for both panels
+   */
   const handleResize = (e: MouseEvent) => {
     if (!editor.current || !preview.current || !resizer.current) return;
+    
+    const resizerWidth = resizer.current.offsetWidth;
+    const minWidth = 100; // Minimum width for editor/preview
+    const maxWidth = window.innerWidth - resizerWidth - minWidth;
+    
     const editorWidth = e.clientX;
-    const previewWidth = window.innerWidth - editorWidth - 4;
-    editor.current.style.width = `${editorWidth}px`;
-    preview.current.style.width = `${previewWidth}px`;
+    const clampedEditorWidth = Math.max(minWidth, Math.min(editorWidth, maxWidth));
+    const calculatedPreviewWidth = window.innerWidth - clampedEditorWidth - resizerWidth;
+    
+    editor.current.style.width = `${clampedEditorWidth}px`;
+    preview.current.style.width = `${calculatedPreviewWidth}px`;
   };
 
   const handleMouseDown = () => {
@@ -71,6 +98,7 @@ function App() {
     document.removeEventListener("mouseup", handleMouseUp);
   };
 
+  // Prevent accidental navigation away when AI is working or content has changed
   useEvent("beforeunload", (e) => {
     if (isAiWorking || html !== defaultHTML) {
       e.preventDefault();
@@ -78,34 +106,34 @@ function App() {
     }
   });
 
+  // Initialize component on mount
   useMount(() => {
+    // Fetch user data
     fetchMe();
+    
+    // Restore content from storage if available
     if (htmlStorage) {
       removeHtmlStorage();
       toast.warn("Previous HTML content restored from local storage.");
     }
-    if (!editor.current || !preview.current) return;
 
-    if (breakpoint === "lg") {
-      // Set initial sizes
-      const initialEditorWidth = window.innerWidth / 2;
-      const initialPreviewWidth = window.innerWidth - initialEditorWidth - 4;
-      editor.current.style.width = `${initialEditorWidth}px`;
-      preview.current.style.width = `${initialPreviewWidth}px`;
-    }
+    // Set initial layout based on window size
+    resetLayout();
 
+    // Attach event listeners
     if (!resizer.current) return;
     resizer.current.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("resize", () => handleMouseDown);
+    window.addEventListener("resize", resetLayout);
   });
 
+  // Clean up event listeners on unmount
   useUnmount(() => {
     document.removeEventListener("mousemove", handleResize);
     document.removeEventListener("mouseup", handleMouseUp);
     if (resizer.current) {
       resizer.current.removeEventListener("mousedown", handleMouseDown);
     }
-    window.removeEventListener("resize", () => handleMouseDown);
+    window.removeEventListener("resize", resetLayout);
   });
 
   return (
