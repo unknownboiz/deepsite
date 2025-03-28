@@ -141,7 +141,7 @@ app.post("/api/deploy", checkUser, async (req, res) => {
       });
       readme = `---
 title: ${newTitle}
-emoji: 🚀
+emoji: 🐳
 colorFrom: blue
 colorTo: blue
 sdk: static
