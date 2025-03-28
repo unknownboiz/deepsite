@@ -1,8 +1,8 @@
 ---
 title: DeepSite
 emoji: 🐳
-colorFrom: green
-colorTo: purple
+colorFrom: blue
+colorTo: blue
 sdk: docker
 pinned: true
 app_port: 5173
