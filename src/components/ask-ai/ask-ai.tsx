@@ -21,7 +21,6 @@ function AskAI({
   isAiWorking: boolean;
   setisAiWorking: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [hasAsked, setHasAsked] = useState(false);
   const [previousPrompt, setPreviousPrompt] = useState("");
@@ -46,18 +45,15 @@ function AskAI({
           "Content-Type": "application/json",
         },
       });
-      if (request && request.body) {
-        if (!request.ok) {
-          const res = await request.json();
-          if (res.openLogin) {
-            setOpen(true);
-          } else {
-            // don't show toast if it's a login error
-            toast.error(res.message);
-          }
-          setisAiWorking(false);
-          return;
-        }
+       if (request && request.body) {
+     if (!request.ok) {
+  const res = await request.json();
+  toast.error(res.message || "Failed to get response from AI");
+  setisAiWorking(false);
+  return;
+}
+}
+
         const reader = request.body.getReader();
         const decoder = new TextDecoder("utf-8");
 
@@ -149,29 +145,6 @@ function AskAI({
         >
           <GrSend className="-translate-x-[1px]" />
         </button>
-      </div>
-      <div
-        className={classNames(
-          "h-screen w-screen bg-black/20 fixed left-0 top-0 z-10",
-          {
-            "opacity-0 pointer-events-none": !open,
-          }
-        )}
-        onClick={() => setOpen(false)}
-      ></div>
-      <div
-        className={classNames(
-          "absolute top-0 -translate-y-[calc(100%+8px)] right-0 z-10 w-80 bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-75 overflow-hidden",
-          {
-            "opacity-0 pointer-events-none": !open,
-          }
-        )}
-      >
-        <Login html={html}>
-          <p className="text-gray-500 text-sm mb-3">
-            You reached the limit of free AI usage. Please login to continue.
-          </p>
-        </Login>
       </div>
     </div>
   );
